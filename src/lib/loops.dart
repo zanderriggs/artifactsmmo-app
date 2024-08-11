@@ -3,22 +3,12 @@ import 'dart:convert';
 
 import 'package:artifactsmmo_app/actions.dart';
 import 'package:artifactsmmo_app/models/data_model.dart';
-import 'package:global_configuration/global_configuration.dart';
-
-// const server = 'https://api.artifactsmmo.com';
-// const token =
-//     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InhhbmRlcndpdGhheiIsInBhc3N3b3JkX2NoYW5nZWQiOiIifQ.j_YrGjASdxsGog6V7N6SxJpn40G9qlSjA6APVXYrGVw';
-// const character = 'Rig';
-
-var server = GlobalConfiguration().getValue('server');
-var token = GlobalConfiguration().getValue('token');
-var character = GlobalConfiguration().getValue('character');
 
 var cooldown;
 
 fightLoop() async {
   // Fight
-  final response = await fight(token, server, character);
+  final response = await fight();
 
   // TODO: Turn these into enums or something
   if (response.statusCode == 498) {
@@ -55,7 +45,7 @@ fightLoop() async {
 
 Future gatherLoop() async {
   // Gather
-  var response = await gather(token, server, character);
+  var response = await gather();
 
   print("Response from gather method: ${response.statusCode}");
 

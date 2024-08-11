@@ -1,7 +1,12 @@
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
-Future<Response> fight(String token, String server, String character) async {
+var server = GlobalConfiguration().getValue('server');
+var token = GlobalConfiguration().getValue('token');
+var character = GlobalConfiguration().getValue('character');
+
+Future<Response> fight() async {
   final url = "$server/my/$character/action/fight";
 
   final headers = {
@@ -22,7 +27,7 @@ Future<Response> fight(String token, String server, String character) async {
   return response;
 }
 
-Future<Response> gather(String token, String server, String character) async {
+Future<Response> gather() async {
   final url = "$server/my/$character/action/gathering";
 
   final headers = {
@@ -42,3 +47,8 @@ Future<Response> gather(String token, String server, String character) async {
 
   return response;
 }
+
+// TODO: Add move action
+// Future<Response> move( int x, int y,) async {
+
+// }
