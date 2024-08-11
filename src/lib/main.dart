@@ -54,6 +54,11 @@ class _MyHomePageState extends State<HomePage> {
               onPressed: fightLoop,
               child: Text("Fight"),
             ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: levelCooking,
+              child: Text("Level Cooking"),
+            ),
           ],
         ),
       ),

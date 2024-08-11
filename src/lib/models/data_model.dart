@@ -12,15 +12,18 @@ class Data {
 class ApiResponse {
   Cooldown? cooldown;
   Fight? fight;
-  // character
+  Character? character;
 
-  ApiResponse({this.cooldown, this.fight});
+  ApiResponse({this.cooldown, this.fight, this.character});
 
   factory ApiResponse.fromJson(Map<String, dynamic> json) {
     return ApiResponse(
       cooldown:
           json['cooldown'] != null ? Cooldown.fromJson(json['cooldown']) : null,
       fight: json['fight'] != null ? Fight.fromJson(json['fight']) : null,
+      character: json['character'] != null
+          ? Character.fromJson(json['character'])
+          : null,
     );
   }
 }
@@ -75,4 +78,47 @@ class Fight {
   }
 }
 
-class Character {}
+class Character {
+  String? name;
+  int? level;
+  int? gold;
+  List<Item>? inventory;
+
+  Character({
+    this.name,
+    this.level,
+    this.gold,
+    this.inventory,
+  });
+
+  factory Character.fromJson(Map<String, dynamic> json) {
+    return Character(
+      name: json['name'],
+      level: json['level'],
+      gold: json['gold'],
+      inventory: (json['inventory'] as List<dynamic>?)
+          ?.map((item) => Item.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+class Item {
+  int? slot;
+  String? code;
+  int? quantity;
+
+  Item({
+    this.slot,
+    this.code,
+    this.quantity,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      slot: json['slot'],
+      code: json['code'],
+      quantity: json['quantity'],
+    );
+  }
+}
