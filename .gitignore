@@ -12,6 +12,7 @@
 .buildlog/
 .history
 .svn/
+*metadata
 
 # IntelliJ related
 *.iml
@@ -59,10 +60,15 @@ analysis_benchmark.json
 .pub-cache/
 .pub/
 build/
+ios/
+android/
+macos/
+linux/
 flutter_*.png
 linked_*.ds
 unlinked.ds
 unlinked_spec.ds
+*config.test.dart
 
 # Android related
 **/android/**/gradle-wrapper.jar
