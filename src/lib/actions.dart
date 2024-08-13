@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:artifactsmmo_app/character_data.dart';
+import 'package:artifactsmmo_app/item_data.dart';
+import 'package:artifactsmmo_app/utility.dart';
 import 'package:flutter/foundation.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
@@ -121,17 +124,64 @@ Future<Response> sell(String itemCode, int itemCount, int price) async {
     'Authorization': 'Bearer $token',
   };
 
-  final body = {"code": itemCode, "quantity": itemCount, "price": price};
-
-  Response response;
-
+  final body =
+      json.encode({"code": itemCode, "quantity": itemCount, "price": price});
+  print(body);
   try {
-    response = await http.post(Uri.parse(url),
-        headers: headers, body: json.encode(body));
+    Response response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+
+    // Checking if the response is not 2xx, indicating a problem
+    if (response.statusCode >= 400) {
+      debugPrint("Request failed with status: ${response.statusCode}");
+      print(response.body);
+    }
+
+    return response;
   } catch (ex) {
     debugPrint("An error occurred. $ex");
     return Response("", 500);
   }
+}
 
-  return response;
+Future sellAllFish() async {
+  // Get item data
+  var itemSellQuantity = await getItemQuantity("cooked_gudgeon");
+  print("Sell quantity: $itemSellQuantity");
+
+  if (itemSellQuantity == null) {
+    debugPrint("An error occurred while retrieving item quantity.");
+    return;
+  }
+
+  // Sell Fish
+  var sellCounter = itemSellQuantity;
+  while (sellCounter > 0) {
+    var itemSellPrice = await getItemSellPrice("cooked_gudgeon");
+    print("Sell Price: $itemSellPrice");
+    if (itemSellPrice == 0) {
+      debugPrint(
+          "No, for real, an error occured while getting the item price.");
+      return;
+    }
+
+    if (sellCounter > 50) {
+      final sellResult = await sell("cooked_gudgeon", 50, itemSellPrice ?? 0);
+      if (sellResult.statusCode == 200) {
+        sellCounter -= 50;
+        await waitCooldown(sellResult);
+      } else {
+        return;
+      }
+    } else {
+      final sellResult =
+          await sell("cooked_gudgeon", sellCounter, itemSellPrice ?? 0);
+      if (sellResult.statusCode == 200) {
+        sellCounter -= sellCounter;
+        await waitCooldown(sellResult);
+      } else {
+        return;
+      }
+    }
+  }
 }

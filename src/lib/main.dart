@@ -1,3 +1,4 @@
+import 'package:artifactsmmo_app/actions.dart';
 import 'package:artifactsmmo_app/loops.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -58,6 +59,11 @@ class _MyHomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: levelCooking,
               child: Text("Level Cooking"),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: sellAllFish,
+              child: Text("Sell All Fish Test"),
             ),
           ],
         ),

@@ -13,8 +13,15 @@ class ApiResponse {
   Cooldown? cooldown;
   Fight? fight;
   Character? character;
+  Item? item;
+  GrandExchange? grandExchange;
 
-  ApiResponse({this.cooldown, this.fight, this.character});
+  ApiResponse(
+      {this.cooldown,
+      this.fight,
+      this.character,
+      this.item,
+      this.grandExchange});
 
   factory ApiResponse.fromJson(Map<String, dynamic> json) {
     return ApiResponse(
@@ -82,7 +89,7 @@ class Character {
   String? name;
   int? level;
   int? gold;
-  List<Item>? inventory;
+  List<InventoryItem>? inventory;
 
   Character({
     this.name,
@@ -97,28 +104,68 @@ class Character {
       level: json['level'],
       gold: json['gold'],
       inventory: (json['inventory'] as List<dynamic>?)
-          ?.map((item) => Item.fromJson(item as Map<String, dynamic>))
+          ?.map((item) => InventoryItem.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
 }
 
-class Item {
+class InventoryItem {
   int? slot;
   String? code;
   int? quantity;
 
-  Item({
+  InventoryItem({
     this.slot,
     this.code,
     this.quantity,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
+  factory InventoryItem.fromJson(Map<String, dynamic> json) {
+    return InventoryItem(
       slot: json['slot'],
       code: json['code'],
       quantity: json['quantity'],
+    );
+  }
+}
+
+class Item {
+  String? name;
+  String? code;
+
+  Item({
+    this.name,
+    this.code,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      name: json['name'],
+      code: json['code'],
+    );
+  }
+}
+
+class GrandExchange {
+  String? code;
+  int? stock;
+  int? sellPrice;
+  int? buyPrice;
+
+  GrandExchange({
+    this.code,
+    this.stock,
+    this.sellPrice,
+    this.buyPrice,
+  });
+
+  factory GrandExchange.fromJson(Map<String, dynamic> json) {
+    return GrandExchange(
+      code: json['code'],
+      stock: json['stock'],
+      sellPrice: json['sell_price'],
+      buyPrice: json['buy_price'],
     );
   }
 }

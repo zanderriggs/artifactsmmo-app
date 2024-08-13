@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:artifactsmmo_app/actions.dart';
 import 'package:artifactsmmo_app/character_data.dart';
+import 'package:artifactsmmo_app/item_data.dart';
 import 'package:artifactsmmo_app/models/data_model.dart';
 import 'package:artifactsmmo_app/utility.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 var cooldown;
@@ -83,17 +85,45 @@ Future<Response> gatherLoop() async {
 
 Future levelCrafting() async {
   // Move to mining resource
+  final moveToMining = await move(2, 0);
 
-  // Gather until inventory full
+  if (moveToMining.statusCode == 200) {
+    await waitCooldown(moveToMining);
+    // Gather until inventory full
+    var gatheringResult = await gatherLoop();
 
-  // Move to refinery
-  // Refine gathered resource
+    if (gatheringResult.statusCode == 497) {
+      await waitCooldown(gatheringResult);
+      final moveToForgeResult = await move(1, 5);
 
-  // Move to craft location
-  // Craft highest level item possible with refined resource
+      if (moveToForgeResult.statusCode == 200) {
+        // Get copper ore amount
+        final copperOreAmount = await getItemQuantity("copper_ore");
+        // Calculate crafting amount
+        var quantity;
+        if (copperOreAmount != null) {
+          quantity = copperOreAmount % 6;
+        }
+        var craftingResult = await craftItems("copper", quantity);
 
-  // Move to Grand Exchange
-  // Sell items
+        if (craftingResult.statusCode == 200) {
+          await waitCooldown(craftingResult);
+
+          // Move to workshop
+          final moveToWorkshopResult = await move(2, 1);
+
+          if (moveToWorkshopResult.statusCode == 200) {
+            // TODO: Craft items with refined ore
+
+            // Craft highest level item possible with refined resource
+
+            // Move to Grand Exchange
+            // Sell items
+          }
+        }
+      }
+    }
+  }
 }
 
 Future levelCooking() async {
@@ -165,19 +195,12 @@ Future levelCooking() async {
           if (grandExchangeMoveResult.statusCode == 200) {
             await waitCooldown(grandExchangeMoveResult);
 
-            // Sell fish
-            // TODO: Fix hardcoded nonsense
-            var sellFishResult = await sell("cooked_gudgeon", quantity, 150);
+            sellAllFish();
 
-            if (sellFishResult.statusCode == 200) {
-              print("You did it. You sold all the fish you caught. Loop it.");
-              await waitCooldown(sellFishResult);
-
-              levelCooking();
-            }
-            print("An error occurred while selling the fish.");
-            return;
+            levelCooking();
           }
+          print("An error occurred while selling the fish.");
+          return;
         }
       }
     }

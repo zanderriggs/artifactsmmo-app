@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:artifactsmmo_app/models/data_model.dart';
+import 'package:artifactsmmo_app/models/get_item_response.dart';
+import 'package:artifactsmmo_app/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';
@@ -8,12 +11,13 @@ import 'package:http/http.dart' as http;
 var server = GlobalConfiguration().getValue('server');
 var token = GlobalConfiguration().getValue('token');
 var character = GlobalConfiguration().getValue('character');
-var baseUrl = "$server/my/$character";
 
 Future<Response> getItemData(
   String itemCode,
 ) async {
-  final url = "$baseUrl/items/$itemCode";
+  print("Getting item data");
+  final url = "$server/items/$itemCode";
+  print(url);
 
   final headers = {
     'Content-Type': 'application/json',
@@ -24,7 +28,7 @@ Future<Response> getItemData(
   Response response;
 
   try {
-    response = await http.post(
+    response = await http.get(
       Uri.parse(url),
       headers: headers,
     );
@@ -34,4 +38,18 @@ Future<Response> getItemData(
   }
 
   return response;
+}
+
+Future<int?> getItemSellPrice(String itemCode) async {
+  var itemDataResponse = await getItemData(itemCode);
+
+  if (itemDataResponse.statusCode == 200) {
+    var decodedResponse = json.decode(itemDataResponse.body);
+    var data = GetItemResponse.fromJson(decodedResponse);
+
+    return data.itemData?.grandExchange?.sellPrice;
+  } else {
+    debugPrint("An error occurred while retrieving the item sell price.");
+    return 0;
+  }
 }
