@@ -40,12 +40,11 @@ You will need an account on [Artifacts MMO](https://artifactsmmo.com) to use the
    Example configuration:
    ```dart
    final Map<String, String> config = {
-  "server": "https://api.artifactsmmo.com",
-  "token": "your-token",
-  "character": "your-character-name"
-};
+      "server": "https://api.artifactsmmo.com",
+      "token": "your-token",
+      "character": "your-character-name"
+   };
 
-   ```
 
 ### 4. Set Up the Development Environment
 
