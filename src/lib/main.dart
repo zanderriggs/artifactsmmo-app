@@ -42,36 +42,48 @@ class _MyHomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: gatherLoop,
-              child: Text("Gather"),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: fightLoop,
-              child: Text("Fight"),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: levelCooking,
-              child: Text("Level Cooking"),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: sellAllFish,
-              child: Text("Sell All Fish Test"),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: stockpileResource,
-              child: Text("Stockpile Resource"),
-            ),
-          ],
-        ),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: [
+              Spacer(),
+              ElevatedButton(
+                onPressed: gatherLoop,
+                child: Text("Gather"),
+              ),
+              SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: fightLoop,
+                child: Text("Fight"),
+              ),
+              SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: levelCooking,
+                child: Text("Level Cooking"),
+              ),
+              SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: stockpileResource,
+                child: Text("Stockpile Resource"),
+              ),
+              Spacer(),
+            ],
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Row(
+            children: [
+              Spacer(),
+              ElevatedButton(
+                onPressed: sellAllFish,
+                child: Text("Sell All Fish Test"),
+              ),
+              Spacer(),
+            ],
+          ),
+        ],
       ),
     );
   }

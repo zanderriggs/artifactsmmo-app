@@ -196,6 +196,10 @@ Future depositAllItemsToBank() async {
   }
 
   for (var item in inventoryList) {
+    if (item.code!.isEmpty) {
+      return;
+    }
+
     var depositResult = await depositItem(item);
 
     await waitCooldown(depositResult);

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:artifactsmmo_app/models/data_model.dart';
+import 'package:artifactsmmo_app/models/get_all_characters_reponse.dart';
 import 'package:artifactsmmo_app/models/get_character_response.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -34,6 +35,33 @@ Future<Response> getCharacterData() async {
   }
 
   return response;
+}
+
+Future<List<Character>?> getAllCharacters() async {
+  final url = "$server/characters/";
+
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
+  Response response;
+
+  try {
+    response = await http.get(
+      Uri.parse(url),
+      headers: headers,
+    );
+  } catch (ex) {
+    debugPrint("An error occurred. $ex");
+    return [];
+  }
+
+  var decodedResponse = json.decode(response.body);
+  var characterList = GetAllCharactersResponse.fromJson(decodedResponse);
+
+  return characterList.characterList;
 }
 
 Future<List<InventoryItem>?> getInventory() async {
