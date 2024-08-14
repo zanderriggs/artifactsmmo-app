@@ -3,10 +3,9 @@ import 'dart:convert';
 
 import 'package:artifactsmmo_app/actions.dart';
 import 'package:artifactsmmo_app/character_data.dart';
-import 'package:artifactsmmo_app/item_data.dart';
 import 'package:artifactsmmo_app/models/data_model.dart';
 import 'package:artifactsmmo_app/utility.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 var cooldown;
@@ -129,7 +128,7 @@ Future levelCrafting() async {
 Future levelCooking() async {
   // Move to fishing
   // TODO: Make map instead of hardcoding values
-  final moveFishingResult = await move(4, 2);
+  final moveFishingResult = await move(5, 2);
 
   if (moveFishingResult.statusCode == 404) {
     print('The map location could not be found.');
@@ -173,17 +172,17 @@ Future levelCooking() async {
         await waitCooldown(moveWorkshopResult);
 
         // Get number of fish in inventory
-        var inventory = await getInventory(moveWorkshopResult);
+        var inventory = await getInventory();
 
         // TODO: Fix hardcoded nonsense
         var quantity =
-            inventory?.firstWhere((item) => item.code == "gudgeon").quantity ??
+            inventory?.firstWhere((item) => item.code == "shrimp").quantity ??
                 0;
         print("Fish quantity: $quantity");
 
         // Cook all fish
         // TODO: Fix hardcoded nonsense
-        var craftResults = await craftItems('cooked_gudgeon', quantity);
+        var craftResults = await craftItems('cooked_shrimp', quantity);
 
         if (craftResults.statusCode == 200) {
           // Cooldown
@@ -204,5 +203,35 @@ Future levelCooking() async {
         }
       }
     }
+  }
+}
+
+// TODO: Modify this to take a String itemCode
+Future stockpileResource() async {
+  // TODO: Move to location with itemCode
+  final moveToGatherResult = await move(2, 0);
+
+  if (moveToGatherResult.statusCode == 200 ||
+      moveToGatherResult.statusCode == 490) {
+    await waitCooldown(moveToGatherResult);
+
+    final gatherResult = await gatherLoop();
+
+    if (gatherResult.statusCode == 497) {
+      // Cooldown
+      await waitCooldown(gatherResult);
+
+      // Move to Bank and deposit all materials
+      var moveBankResult = await move(4, 1);
+
+      if (moveBankResult.statusCode == 200) {
+        await depositAllItemsToBank();
+      }
+
+      await stockpileResource();
+    }
+  } else {
+    debugPrint("An error occurred while moving to resource location.");
+    return;
   }
 }

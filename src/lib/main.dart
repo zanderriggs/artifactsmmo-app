@@ -65,6 +65,11 @@ class _MyHomePageState extends State<HomePage> {
               onPressed: sellAllFish,
               child: Text("Sell All Fish Test"),
             ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: stockpileResource,
+              child: Text("Stockpile Resource"),
+            ),
           ],
         ),
       ),

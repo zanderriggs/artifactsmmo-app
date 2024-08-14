@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:artifactsmmo_app/models/data_model.dart';
 import 'package:artifactsmmo_app/models/get_item_response.dart';
-import 'package:artifactsmmo_app/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart';

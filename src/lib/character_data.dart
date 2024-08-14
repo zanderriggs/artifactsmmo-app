@@ -36,11 +36,18 @@ Future<Response> getCharacterData() async {
   return response;
 }
 
-Future<List<InventoryItem>?> getInventory(Response response) async {
-  var decodedResponse = json.decode(response.body);
-  var data = Data.fromJson(decodedResponse);
+Future<List<InventoryItem>?> getInventory() async {
+  final getCharacterDataResult = await getCharacterData();
 
-  return data.apiResponse?.character?.inventory;
+  if (getCharacterDataResult.statusCode != 200) {
+    debugPrint("An error occurred while retrieving character data.");
+    return [];
+  }
+
+  var decodedResponse = json.decode(getCharacterDataResult.body);
+  var data = GetCharacterResponse.fromJson(decodedResponse);
+
+  return data.character?.inventory?.toList();
 }
 
 Future<int?> getItemQuantity(String itemCode) async {
