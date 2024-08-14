@@ -225,6 +225,8 @@ Future stockpileResource() async {
       var moveBankResult = await move(4, 1);
 
       if (moveBankResult.statusCode == 200) {
+        // Cooldown
+        await waitCooldown(moveBankResult);
         await depositAllItemsToBank();
       }
 

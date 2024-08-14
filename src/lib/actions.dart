@@ -200,14 +200,15 @@ Future depositAllItemsToBank() async {
 
     await waitCooldown(depositResult);
     if (depositResult.statusCode >= 400) {
-      debugPrint("An error ocurred while depositing item. ${item.code}");
+      debugPrint(
+          "An error ocurred while depositing item. ${depositResult.statusCode} Item: ${item.code}");
       return;
     }
   }
 }
 
 Future<Response> depositItem(InventoryItem item) async {
-  final url = "$baseUrl/my/$character/action/bank/deposit";
+  final url = "$baseUrl/action/bank/deposit";
 
   final headers = {
     'Content-Type': 'application/json',
@@ -226,7 +227,8 @@ Future<Response> depositItem(InventoryItem item) async {
 
     // Checking if the response is not 2xx, indicating a problem
     if (response.statusCode >= 400) {
-      debugPrint("Request failed with status: ${response.statusCode}");
+      debugPrint(
+          "Request failed with status: ${response.statusCode} {${item.code}, ${item.quantity}}");
       print(response.body);
     }
 
