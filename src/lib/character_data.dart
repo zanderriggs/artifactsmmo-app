@@ -37,6 +37,34 @@ Future<Response> getCharacterData() async {
   return response;
 }
 
+Future<List<Character>?> getMyCharacters() async {
+  final url = "$server/my/characters/";
+
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
+  Response response;
+
+  try {
+    response = await http.get(
+      Uri.parse(url),
+      headers: headers,
+    );
+  } catch (ex) {
+    debugPrint("An error occurred. $ex");
+    return [];
+  }
+
+  var decodedResponse = json.decode(response.body);
+  var characterList = GetAllCharactersResponse.fromJson(decodedResponse);
+
+  return characterList.characterList;
+}
+
+// Returns ALL characters (don't use this)
 Future<List<Character>?> getAllCharacters() async {
   final url = "$server/characters/";
 
